@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>820</width>
-    <height>610</height>
+    <height>604</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -49,7 +49,21 @@
     <addaction name="actionSave"/>
     <addaction name="actionExit"/>
    </widget>
+   <widget class="QMenu" name="menuWindow">
+    <property name="title">
+     <string>Windows</string>
+    </property>
+    <addaction name="actionCascade"/>
+   </widget>
+   <widget class="QMenu" name="menuOperation">
+    <property name="title">
+     <string>Operation</string>
+    </property>
+    <addaction name="actionHistogram"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuWindow"/>
+   <addaction name="menuOperation"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionGrayscale">
@@ -70,6 +84,16 @@
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionCascade">
+   <property name="text">
+    <string>Cascade</string>
+   </property>
+  </action>
+  <action name="actionHistogram">
+   <property name="text">
+    <string>Histogram</string>
    </property>
   </action>
  </widget>

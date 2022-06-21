@@ -23,10 +23,16 @@ class UI(QMainWindow):
         #Define File menu
         self.action_open_grayscale = self.findChild(QAction, "actionGrayscale")
         self.action_open_color = self.findChild(QAction, "actionColor")
+        self.action_cascade = self.findChild(QAction, "actionCascade")
+        self.action_histogram = self.findChild(QAction, "actionHistogram")
 
         #Click Button
         self.action_open_grayscale.triggered.connect(self.open_windows_gray)
         self.action_open_color.triggered.connect(self.open_windows_color)
+        self.action_cascade.triggered.connect(self.mdi.cascadeSubWindows)
+        self.action_histogram.triggered.connect(self.show_histogram)
+
+        self.mdi.subWindowActivated.connect(self.update_active_window)
 
         self.show()
 
@@ -52,10 +58,8 @@ class UI(QMainWindow):
             self.mdi.addSubWindow(image.sub)
             image.sub.show()
     def open_windows_color(self):
-        f_paths, _ = QFileDialog.getOpenFileNames(self, "Open file", "D:\\Test_Images\\", "All Files (*);;"
-                                                                                          "BMP files(*.bmp);;"
+        f_paths, _ = QFileDialog.getOpenFileNames(self, "Open file", "D:\\Test_Images\\", "BMP files(*.bmp);;"
                                                                                          "JPEG files (*.jpeg *.jpg);;"
-                                                                                         "PNG(*.png);;"
                                                                                          "TIFF files (*.tiff *.tif)")
         if not f_paths:
             return
@@ -72,6 +76,38 @@ class UI(QMainWindow):
             self.windows[UI.counter] = image
             self.mdi.addSubWindow(image.sub)
             image.sub.show()
+
+    def show_histogram(self):
+        if self.active_window.gray == True:
+            my_hist = np.zeros(256)
+            print(self.active_window.data.shape)
+
+            for h in range(self.active_window.data.shape[0]):
+                for w in range(self.active_window.data.shape[1]):
+                    current_pixel = self.active_window.data[h, w]
+                    # print(current_pixel)
+                    my_hist[current_pixel] += 1
+            plt.figure(self.active_window.number)
+            plt.plot(my_hist)
+            plt.show()
+        else:
+            my_hist = [np.zeros(256), np.zeros(256), np.zeros(256)]
+
+            for w in range(self.active_window.data.shape[0]):
+                for h in range(self.active_window.data.shape[1]):
+                    for i in range(self.active_window.data.shape[2]):
+                        pixel = self.active_window.data[w][h][i]
+                        my_hist[i][pixel] += 1
+            plt.figure(self.active_window.number)
+            plt.plot(my_hist[0], color='b')
+            plt.plot(my_hist[1], color='g')
+            plt.plot(my_hist[2], color='r')
+            plt.show()
+
+    def update_active_window(self, sub):
+        if sub.number in self.windows:
+            self.active_window = self.windows.get(sub.number)
+
 
 
 if __name__ == '__main__':

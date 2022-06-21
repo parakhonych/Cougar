@@ -8,7 +8,8 @@ class Sub_Image:
         self.number = image_number
         self.gray = image_gray
         self.sub = Sub_Window(self.name, self.data, self.number)
-        #print(image_gray)
+
+
 
 class Sub_Window(QMdiSubWindow):
     def __init__(self, img_name, img_data, img_number):
