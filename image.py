@@ -1,4 +1,5 @@
 import cv2
+import numpy as np
 from PyQt5.QtWidgets import QMdiSubWindow, QLabel
 from PyQt5.QtGui import QImage, QPixmap
 class Sub_Image:
@@ -8,6 +9,7 @@ class Sub_Image:
         self.number = image_number
         self.gray = image_gray
         self.sub = Sub_Window(self.name, self.data, self.number)
+
 
 
 

@@ -60,6 +60,9 @@
      <string>Operation</string>
     </property>
     <addaction name="actionHistogram"/>
+    <addaction name="actionStretching"/>
+    <addaction name="actionEqualization"/>
+    <addaction name="actionNegation"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuWindow"/>
@@ -94,6 +97,21 @@
   <action name="actionHistogram">
    <property name="text">
     <string>Histogram</string>
+   </property>
+  </action>
+  <action name="actionStretching">
+   <property name="text">
+    <string>Stretching</string>
+   </property>
+  </action>
+  <action name="actionEqualization">
+   <property name="text">
+    <string>Equalization</string>
+   </property>
+  </action>
+  <action name="actionNegation">
+   <property name="text">
+    <string>Negation</string>
    </property>
   </action>
  </widget>
