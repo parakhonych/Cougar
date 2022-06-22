@@ -4,7 +4,31 @@ import numpy as np
 import matplotlib.pyplot as plt
 from image import Sub_Image
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMdiArea, QAction, QFileDialog,QMessageBox
+from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMdiArea, QAction, QFileDialog, QMessageBox, QDialog, QLabel, QDial, QDialogButtonBox
+
+class Thresholding(QDialog):
+    def __init__(self):
+        super(Thresholding, self).__init__()
+        uic.loadUi("Thresholding.ui", self)
+        self.currently_position = 0
+        self.check = False
+
+        ## Define our widgets
+        self.dial = self.findChild(QDial, "dial")
+        self.label = self.findChild(QLabel, "label")
+
+        self.dial.setRange(0, 255)
+        self.dial.valueChanged.connect(self.dialer)
+        self.show()
+
+    def dialer(self):
+        #Grab the Current dial position
+        value = self.dial.value()
+        #Set label text
+        self.label.setText(f'Current Position: {str(value)}')
+        self.currently_position = self.dial.value()
+        self.check = True
 
 class UI(QMainWindow):
     counter = 0
@@ -12,6 +36,7 @@ class UI(QMainWindow):
         super(UI, self).__init__()
         self.windows = dict()
         self.active_window = None
+        self.thresholding_value = -1
 
         # Load the ui file
         uic.loadUi("main_window.ui", self)
@@ -28,6 +53,10 @@ class UI(QMainWindow):
         self.action_stretching = self.findChild(QAction, "actionStretching")
         self.action_equalization = self.findChild(QAction, "actionEqualization")
         self.action_negation = self.findChild(QAction, "actionNegation")
+        self.action_set_thresholding = self.findChild(QAction, "actionSet_value")
+        self.action_calculate_thresholding = self.findChild(QAction, "action_calculate_Thresholding")
+
+
 
         #Click Button
         self.action_open_grayscale.triggered.connect(self.open_windows_gray)
@@ -37,6 +66,8 @@ class UI(QMainWindow):
         self.action_stretching.triggered.connect(self.stretching)
         self.action_equalization.triggered.connect(self.equalization)
         self.action_negation.triggered.connect(self.negation)
+        self.action_set_thresholding.triggered.connect(self.set_value_dial)
+        self.action_calculate_thresholding.triggered.connect(self.show_Thresholding)
 
         self.mdi.subWindowActivated.connect(self.update_active_window)
 
@@ -120,7 +151,9 @@ class UI(QMainWindow):
         if self.active_window == None:
             QMessageBox.warning(self, "No active window", "Please select File-> Open first to check this operation.\n")
             return
-
+        #if self.active_window.gray == True:
+        #    QMessageBox.warning(self, "Incorrect image type", "This function works only for grayscale images.\n")
+        #    return
         # define scaling range
         im_min = np.min(self.active_window.data)
         im_max = np.max(self.active_window.data)
@@ -150,6 +183,12 @@ class UI(QMainWindow):
         return np.array(b)
 
     def equalization(self):
+        if self.active_window == None:
+            QMessageBox.warning(self, "No active window", "Please select File-> Open first to check this operation.\n")
+            return
+        #if self.active_window.gray == True:
+        #    QMessageBox.warning(self, "Incorrect image type", "This function works only for grayscale images.\n")
+        #    return
         my_hist = np.zeros(256)
         # loop through image
         for h in range(self.active_window.data.shape[0]):
@@ -182,6 +221,9 @@ class UI(QMainWindow):
         if self.active_window == None:
             QMessageBox.warning(self, "No active window", "Please select File-> Open first to check this operation.\n")
             return
+        #if self.active_window.gray == True:
+        #    QMessageBox.warning(self, "Incorrect image type", "This function works only for grayscale images.\n")
+        #    return
         if self.active_window.data.dtype != 'uint8':
             QMessageBox.warning(self, "Wrong Image", "Please select File-> Open first to check this operation.\n")
             return
@@ -193,6 +235,37 @@ class UI(QMainWindow):
         self.windows[UI.counter] = image
         self.mdi.addSubWindow(image.sub)
         image.sub.show()
+
+    def set_value_dial(self):
+        self.window = QDialog()
+        self.ui = Thresholding()
+
+    def show_Thresholding(self):
+        if self.active_window == None:
+            QMessageBox.warning(self, "No active window", "Please select File-> Open first to check this operation.\n")
+            return
+        #if self.active_window.gray == True:
+        #    QMessageBox.warning(self, "Incorrect image type", "This function works only for grayscale images.\n")
+        #    return
+        if self.ui.currently_position == -1:
+            QMessageBox.warning(self, "Wrong value", "Please set the value for the thresholding function first.\n")
+            return
+        myThresh = self.ui.currently_position
+        img_th = np.zeros_like(self.active_window.data)
+        # loop through image
+        for h in range(self.active_window.data.shape[0]):
+            for w in range(self.active_window.data.shape[1]):
+                current_pixel = self.active_window.data[h, w]
+                # print(current_pixel)
+                if (current_pixel > myThresh): img_th[h, w] = 1  # thresholding condition
+        img_th=img_th*255
+        name = "Thresholding: " + self.active_window.name
+        UI.counter = UI.counter + 1
+        image = Sub_Image(name, img_th, UI.counter, True)
+        self.windows[UI.counter] = image
+        self.mdi.addSubWindow(image.sub)
+        image.sub.show()
+
 
 
 

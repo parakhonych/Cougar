@@ -59,10 +59,18 @@
     <property name="title">
      <string>Operation</string>
     </property>
+    <widget class="QMenu" name="menuThresholding">
+     <property name="title">
+      <string>Thresholding</string>
+     </property>
+     <addaction name="actionSet_value"/>
+     <addaction name="action_calculate_Thresholding"/>
+    </widget>
     <addaction name="actionHistogram"/>
     <addaction name="actionStretching"/>
     <addaction name="actionEqualization"/>
     <addaction name="actionNegation"/>
+    <addaction name="menuThresholding"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuWindow"/>
@@ -112,6 +120,16 @@
   <action name="actionNegation">
    <property name="text">
     <string>Negation</string>
+   </property>
+  </action>
+  <action name="actionSet_value">
+   <property name="text">
+    <string>Set value</string>
+   </property>
+  </action>
+  <action name="action_calculate_Thresholding">
+   <property name="text">
+    <string>Сalculate Thresholding</string>
    </property>
   </action>
  </widget>

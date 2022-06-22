@@ -22,7 +22,7 @@ class Sub_Window(QMdiSubWindow):
         self.image_label = QLabel()
         self.setWidget(self.image_label)
         self.setWindowTitle(self.title)
-        rgb_image = cv2.cvtColor(self.sub_data , cv2.COLOR_BGR2RGB)
+        rgb_image = cv2.cvtColor(self.sub_data, cv2.COLOR_BGR2RGB)
         h, w, ch = rgb_image.shape
         bytes_per_line = ch * w
         tempimage = QImage(rgb_image.data, w, h, bytes_per_line, QImage.Format_RGB888)
