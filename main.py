@@ -55,7 +55,7 @@ class UI(QMainWindow):
         self.action_negation = self.findChild(QAction, "actionNegation")
         self.action_set_thresholding = self.findChild(QAction, "actionSet_value")
         self.action_calculate_thresholding = self.findChild(QAction, "action_calculate_Thresholding")
-
+        self.action_posterize = self.findChild(QAction, "actionPosterize")
 
 
         #Click Button
@@ -68,6 +68,7 @@ class UI(QMainWindow):
         self.action_negation.triggered.connect(self.negation)
         self.action_set_thresholding.triggered.connect(self.set_value_dial)
         self.action_calculate_thresholding.triggered.connect(self.show_Thresholding)
+        self.action_posterize.triggered.connect(self.Posterize)
 
         self.mdi.subWindowActivated.connect(self.update_active_window)
 
@@ -265,13 +266,29 @@ class UI(QMainWindow):
         self.windows[UI.counter] = image
         self.mdi.addSubWindow(image.sub)
         image.sub.show()
+    def Posterize(self):
+        myPosterizeBinsNum = 8
+        # calc size of binning
+        myBins = np.arange(0, 255, np.round(255 / myPosterizeBinsNum))
 
+        # init output image
+        img_pstrz = np.zeros_like(self.active_window.data)
+        # loop through image
+        for h in range(self.active_window.data.shape[0]):
+            for w in range(self.active_window.data.shape[1]):
+                current_pixel = self.active_window.data[h, w]
+                # loop through bins
+                for bin in range(myPosterizeBinsNum):
+                    # print(myBins[bin])
+                    if (current_pixel > myBins[bin]): img_pstrz[h, w] = myBins[bin]  # if inside bin assign value
 
-
-
-
-
-
+                if (current_pixel > myBins[-1]): img_pstrz[h, w] = 255  # last bin -> fill with max value
+        name = "Posterize: " + self.active_window.name
+        UI.counter = UI.counter + 1
+        image = Sub_Image(name, img_pstrz, UI.counter, True)
+        self.windows[UI.counter] = image
+        self.mdi.addSubWindow(image.sub)
+        image.sub.show()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

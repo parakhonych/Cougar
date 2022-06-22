@@ -71,6 +71,7 @@
     <addaction name="actionEqualization"/>
     <addaction name="actionNegation"/>
     <addaction name="menuThresholding"/>
+    <addaction name="actionPosterize"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuWindow"/>
@@ -130,6 +131,11 @@
   <action name="action_calculate_Thresholding">
    <property name="text">
     <string>Сalculate Thresholding</string>
+   </property>
+  </action>
+  <action name="actionPosterize">
+   <property name="text">
+    <string>Posterize</string>
    </property>
   </action>
  </widget>
