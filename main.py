@@ -97,7 +97,8 @@ class UI(QMainWindow):
         self.action_morphological_closure = self.findChild(QAction, "actionMorphological_closure")
         self.action_skeletonization = self.findChild(QAction, "actionSkeletonization")
         self.action_otsu_thresholding = self.findChild(QAction, "actionOtsu_thresholding")
-        #self.action_watershed = self.findChild(QAction, "actionWatershed")
+        self.action_median_filter = self.findChild(QAction, "actionMedian_filter")
+        self.action_watershed = self.findChild(QAction, "actionWatershed")
 
         #About
         self.action_autor = self.findChild(QAction, "actionAutor")
@@ -134,7 +135,8 @@ class UI(QMainWindow):
         self.action_morphological_closure.triggered.connect(self.morph_close)
         self.action_skeletonization.triggered.connect(self.skeletonization)
         self.action_otsu_thresholding.triggered.connect(self.otsu)
-        #self.action_watershed.triggered.connect(self._watershed)
+        self.action_median_filter.triggered.connect(self.media_filt)
+        self.action_watershed.triggered.connect(self._watershed)
 
         #Click Button About
         self.action_autor.triggered.connect(self.about)
@@ -404,8 +406,36 @@ class UI(QMainWindow):
         self.windows[UI.counter] = image
         self.mdi.addSubWindow(image.sub)
         image.sub.show()
-    '''
-    def my_watershed(self, image):
+    def media_filt(self):
+        if self.active_window == None:
+            QMessageBox.warning(self, "No active window", "Please select File-> Open first to check this operation.\n")
+            return
+        if self.active_window.gray != True:
+            QMessageBox.warning(self, "Incorrect image type", "This function works only for grayscale images.\n")
+            return
+        medianBlured_img = cv2.medianBlur(self.active_window.data, 11)
+        name = "Median Filter : " + self.active_window.name
+        UI.counter = UI.counter + 1
+        image = Sub_Image(name, medianBlured_img, UI.counter, True)
+        self.windows[UI.counter] = image
+        self.mdi.addSubWindow(image.sub)
+        image.sub.show()
+
+    def _watershed(self):
+        f_path, _ = QFileDialog.getOpenFileName(self, "Open file", "D:\\Test_Images\\", "BMP files(*.bmp);;"
+                                                                                          "JPEG files (*.jpeg *.jpg);;"
+                                                                                          "TIFF files (*.tiff *.tif)")
+        name = f_path.split("/")[-1]
+        img2 = cv2.imread(f_path, cv2.IMREAD_COLOR)
+        plt.figure(name)
+        plt.imshow(cv2.cvtColor(img2, cv2.COLOR_BGR2RGB))
+        plt.show()
+        out1 = self.my_watershed(img2)
+        plt.figure("Result")
+        plt.imshow(out1)
+        plt.show()
+
+    def my_watershed(self,image):
         img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
         ret2, thresh = cv2.threshold(img_gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
@@ -430,17 +460,17 @@ class UI(QMainWindow):
         image[markers2 == -1] = [255, 0, 0]
 
         print("Znaleziono " + str(np.max(markers2)) + " obiektów.")
-
+        plt.figure("Objects find")
+        plt.plot(np.max(markers2), np.max(markers2))
+        plt.show()
         # wizuaizacja: obraz oryginalny oraz wynik algorytmy watershed
+        frame = cv2.hconcat((image, cv2.applyColorMap(np.uint8(markers2 * 10), cv2.COLORMAP_JET)))
         # cv2_imshow(frame)
-
+        plt.figure('Watershed')
+        plt.imshow(frame)
+        plt.show()
 
         return markers2
-
-    def _watershed (self):
-        out1 = self.my_watershed(cv2.imread(self.active_window.data, cv2.IMREAD_COLOR))
-        print(out1)
-    '''
     def Posterize(self):
         if self.active_window == None:
             QMessageBox.warning(self, "No active window", "Please select File-> Open first to check this operation.\n")
