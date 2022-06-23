@@ -391,6 +391,12 @@ class UI(QMainWindow):
         self.mdi.addSubWindow(image.sub)
         image.sub.show()
     def otsu(self):
+        if self.active_window == None:
+            QMessageBox.warning(self, "No active window", "Please select File-> Open first to check this operation.\n")
+            return
+        if self.active_window.gray != True:
+            QMessageBox.warning(self, "Incorrect image type", "This function works only for grayscale images.\n")
+            return
         ret2, th2 = cv2.threshold(self.active_window.data, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
         name = "Otsu Segmentation: " + self.active_window.name
         UI.counter = UI.counter + 1
