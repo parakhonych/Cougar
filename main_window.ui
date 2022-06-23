@@ -66,16 +66,61 @@
      <addaction name="actionSet_value"/>
      <addaction name="action_calculate_Thresholding"/>
     </widget>
+    <widget class="QMenu" name="menuBlur">
+     <property name="title">
+      <string>Blur</string>
+     </property>
+     <addaction name="actionSet_Kernel"/>
+     <addaction name="actionBlur_Normal"/>
+     <addaction name="actionBlur_Gaussian"/>
+    </widget>
+    <widget class="QMenu" name="menuEdge_operations">
+     <property name="title">
+      <string>Edge operations</string>
+     </property>
+     <widget class="QMenu" name="menuEdge_detection">
+      <property name="title">
+       <string>Edge detection</string>
+      </property>
+      <addaction name="actionLaplacian"/>
+      <addaction name="actionSobel"/>
+      <addaction name="actionCanny"/>
+     </widget>
+     <addaction name="menuEdge_detection"/>
+     <addaction name="actionLinear_sharpening"/>
+     <addaction name="actionDirectional_edge_detection"/>
+     <addaction name="actionUniversal_linear_neighborhood_operation"/>
+    </widget>
+    <widget class="QMenu" name="menuMorphological_and_skeletonization">
+     <property name="title">
+      <string>Morphological and skeletonization</string>
+     </property>
+     <addaction name="actionErosion"/>
+     <addaction name="actionDilation"/>
+     <addaction name="actionMorphological_opening"/>
+     <addaction name="actionMorphological_closure"/>
+     <addaction name="actionSkeletonization"/>
+    </widget>
     <addaction name="actionHistogram"/>
     <addaction name="actionStretching"/>
     <addaction name="actionEqualization"/>
     <addaction name="actionNegation"/>
     <addaction name="menuThresholding"/>
     <addaction name="actionPosterize"/>
+    <addaction name="menuBlur"/>
+    <addaction name="menuEdge_operations"/>
+    <addaction name="menuMorphological_and_skeletonization"/>
+   </widget>
+   <widget class="QMenu" name="menuAbout">
+    <property name="title">
+     <string>About</string>
+    </property>
+    <addaction name="actionAutor"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuWindow"/>
    <addaction name="menuOperation"/>
+   <addaction name="menuAbout"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionGrayscale">
@@ -136,6 +181,81 @@
   <action name="actionPosterize">
    <property name="text">
     <string>Posterize</string>
+   </property>
+  </action>
+  <action name="actionBlur_Normal">
+   <property name="text">
+    <string>Blur(Normal)</string>
+   </property>
+  </action>
+  <action name="actionBlur_Gaussian">
+   <property name="text">
+    <string>Blur(Gaussian)</string>
+   </property>
+  </action>
+  <action name="actionSet_Kernel">
+   <property name="text">
+    <string>Set Kernel</string>
+   </property>
+  </action>
+  <action name="actionAutor">
+   <property name="text">
+    <string>Autor</string>
+   </property>
+  </action>
+  <action name="actionLaplacian">
+   <property name="text">
+    <string>Laplacian</string>
+   </property>
+  </action>
+  <action name="actionSobel">
+   <property name="text">
+    <string>Sobel</string>
+   </property>
+  </action>
+  <action name="actionCanny">
+   <property name="text">
+    <string>Canny</string>
+   </property>
+  </action>
+  <action name="actionLinear_sharpening">
+   <property name="text">
+    <string>Linear sharpening</string>
+   </property>
+  </action>
+  <action name="actionDirectional_edge_detection">
+   <property name="text">
+    <string>Directional edge detection</string>
+   </property>
+  </action>
+  <action name="actionUniversal_linear_neighborhood_operation">
+   <property name="text">
+    <string>Universal linear neighborhood operation</string>
+   </property>
+  </action>
+  <action name="actionErosion">
+   <property name="text">
+    <string>Erosion</string>
+   </property>
+  </action>
+  <action name="actionDilation">
+   <property name="text">
+    <string>Dilation</string>
+   </property>
+  </action>
+  <action name="actionMorphological_opening">
+   <property name="text">
+    <string>Morphological opening</string>
+   </property>
+  </action>
+  <action name="actionMorphological_closure">
+   <property name="text">
+    <string>Morphological closure</string>
+   </property>
+  </action>
+  <action name="actionSkeletonization">
+   <property name="text">
+    <string>Skeletonization</string>
    </property>
   </action>
  </widget>
