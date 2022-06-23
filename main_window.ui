@@ -101,6 +101,12 @@
      <addaction name="actionMorphological_closure"/>
      <addaction name="actionSkeletonization"/>
     </widget>
+    <widget class="QMenu" name="menuSegmentation">
+     <property name="title">
+      <string>Segmentation</string>
+     </property>
+     <addaction name="actionOtsu_thresholding"/>
+    </widget>
     <addaction name="actionHistogram"/>
     <addaction name="actionStretching"/>
     <addaction name="actionEqualization"/>
@@ -110,6 +116,7 @@
     <addaction name="menuBlur"/>
     <addaction name="menuEdge_operations"/>
     <addaction name="menuMorphological_and_skeletonization"/>
+    <addaction name="menuSegmentation"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -256,6 +263,11 @@
   <action name="actionSkeletonization">
    <property name="text">
     <string>Skeletonization</string>
+   </property>
+  </action>
+  <action name="actionOtsu_thresholding">
+   <property name="text">
+    <string>Otsu thresholding</string>
    </property>
   </action>
  </widget>

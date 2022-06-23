@@ -96,9 +96,8 @@ class UI(QMainWindow):
         self.action_morphological_opening = self.findChild(QAction, "actionMorphological_opening")
         self.action_morphological_closure = self.findChild(QAction, "actionMorphological_closure")
         self.action_skeletonization = self.findChild(QAction, "actionSkeletonization")
-
-
-
+        self.action_otsu_thresholding = self.findChild(QAction, "actionOtsu_thresholding")
+        #self.action_watershed = self.findChild(QAction, "actionWatershed")
 
         #About
         self.action_autor = self.findChild(QAction, "actionAutor")
@@ -134,8 +133,8 @@ class UI(QMainWindow):
         self.action_morphological_opening.triggered.connect(self.morph_open)
         self.action_morphological_closure.triggered.connect(self.morph_close)
         self.action_skeletonization.triggered.connect(self.skeletonization)
-
-
+        self.action_otsu_thresholding.triggered.connect(self.otsu)
+        #self.action_watershed.triggered.connect(self._watershed)
 
         #Click Button About
         self.action_autor.triggered.connect(self.about)
@@ -391,6 +390,51 @@ class UI(QMainWindow):
         self.windows[UI.counter] = image
         self.mdi.addSubWindow(image.sub)
         image.sub.show()
+    def otsu(self):
+        ret2, th2 = cv2.threshold(self.active_window.data, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+        name = "Otsu Segmentation: " + self.active_window.name
+        UI.counter = UI.counter + 1
+        image = Sub_Image(name, th2, UI.counter, True)
+        self.windows[UI.counter] = image
+        self.mdi.addSubWindow(image.sub)
+        image.sub.show()
+    '''
+    def my_watershed(self, image):
+        img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+        ret2, thresh = cv2.threshold(img_gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+        kernel = np.ones((3, 3), np.uint8)
+        opening = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel, iterations=1)
+
+        sure_bg = cv2.dilate(opening, kernel, iterations=1)
+        dist_transform = cv2.distanceTransform(opening, cv2.DIST_L2, 5)
+
+        ret, sure_fg = cv2.threshold(dist_transform, 0.5 * dist_transform.max(), 255, 0)
+        sure_fg = np.uint8(sure_fg)
+
+        unknown = cv2.subtract(sure_bg, sure_fg)
+        ret, markers = cv2.connectedComponents(sure_fg)
+
+        markers = markers + 1
+        markers[unknown == 255] = 0
+
+        markers2 = cv2.watershed(image, markers)
+
+        img_gray[markers2 == -1] = 255
+        image[markers2 == -1] = [255, 0, 0]
+
+        print("Znaleziono " + str(np.max(markers2)) + " obiektów.")
+
+        # wizuaizacja: obraz oryginalny oraz wynik algorytmy watershed
+        # cv2_imshow(frame)
+
+
+        return markers2
+
+    def _watershed (self):
+        out1 = self.my_watershed(cv2.imread(self.active_window.data, cv2.IMREAD_COLOR))
+        print(out1)
+    '''
     def Posterize(self):
         if self.active_window == None:
             QMessageBox.warning(self, "No active window", "Please select File-> Open first to check this operation.\n")
